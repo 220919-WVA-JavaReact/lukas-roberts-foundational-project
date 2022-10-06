@@ -18,7 +18,6 @@ public class RequestDAOImpl implements RequestDAO {
 
     @Override
     public List<Request> viewAllOpenRequests(Employee employee) {
-        // maybe use LinkedList for first in first out for requests
         return null;
     }
 
@@ -28,7 +27,7 @@ public class RequestDAOImpl implements RequestDAO {
     }
 
     @Override
-    public Request updateRequest(int id, String approvalStatus) {
+    public Request updateRequest(int id, String approvalStatus, Employee employee) {
         return null;
     }
 

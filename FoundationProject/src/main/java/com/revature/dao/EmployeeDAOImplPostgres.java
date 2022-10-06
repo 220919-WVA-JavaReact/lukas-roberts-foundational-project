@@ -30,18 +30,8 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
         return employee;
     }
 
-// to get all teachers
-// List<Teacher> teacher = new ArrayList<>();
-//    while (rs.next()) {
-//        int id = rs.getInt("teacher_id");
-//        String firsrt = rs.getString("first");
-//        Teacher teach = new Teacher(id, first...);
-//        teachers.add(teach);
-//    }
-
     @Override
     public Employee createEmployee(String first, String last, String email, String password, boolean manager) {
-        Employee employee = new Employee();
         try(Connection conn = ConnectionUtil.getConnection()) {
             String sql = "INSERT INTO employees (first, last, email, password, manager) VALUES (?,?,?,?,?) RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -59,8 +49,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
                 String recEmail = rs.getString("email");
                 String recPassword = rs.getString("password");
                 Boolean recManager = rs.getBoolean("manager");
-                employee = new Employee(id, recFirst, recLast, recEmail, recPassword, recManager);
-                return employee;
+                return new Employee(id, recFirst, recLast, recEmail, recPassword, recManager);
             }
         } catch (SQLException e) {
             e.printStackTrace();

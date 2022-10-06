@@ -13,7 +13,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
     public Request createRequest(Employee employee, double price, String description) {
         Request request = new Request();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "INSERT INTO requests (employee_id, price, description, approval_status, completed) VALUES (?,?,?) RETURNING *";
+            String sql = "INSERT INTO requests (employee_id, price, description, approval_status, completed) VALUES (?,?,?,?,?) RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, employee.getId());
             ps.setDouble(2, price);
@@ -24,11 +24,11 @@ public class RequestDAOImplPostgres implements RequestDAO{
             if ((rs = ps.executeQuery()) != null) {
                 rs.next();
                 int id = rs.getInt("id");
-                double recievedPrice = rs.getDouble("price");
-                String recievedDescription = rs.getString("description");
+                double receivedPrice = rs.getDouble("price");
+                String receivedDescription = rs.getString("description");
                 String approvalStatus = rs.getString("approval_status");
                 boolean completed = rs.getBoolean("completed");
-                request =  new Request(id, recievedPrice,recievedDescription, approvalStatus, completed, employee);
+                request =  new Request(id, receivedPrice, receivedDescription, approvalStatus, completed, employee);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
         Employee emp = new Employee();
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM request NATURAL JOIN employees WHERE employee_id = ?";
+            String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE employee_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs;
@@ -126,9 +126,9 @@ public class RequestDAOImplPostgres implements RequestDAO{
     }
 
     @Override
-    public Request updateRequest(int id, String approvalStatus) {
+    public Request updateRequest(int id, String approvalStatus, Employee employee) {
         Request request = new Request();
-        Employee emp = new Employee();
+        Employee emp = employee;
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "UPDATE requests SET approval_status = ?, completed = ? WHERE id = ? RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -142,12 +142,6 @@ public class RequestDAOImplPostgres implements RequestDAO{
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
                 boolean completed = rs.getBoolean("completed");
-                emp.setId(rs.getInt("employee_id"));
-                emp.setFirst(rs.getString("first"));
-                emp.setLast(rs.getString("last"));
-                emp.setEmail(rs.getString("email"));
-                emp.setPassword(rs.getString("password"));
-                emp.setManager(rs.getBoolean("manager"));
                 request = new Request(requestId, price, description, approvalStatus, completed, emp);
             }
         } catch (SQLException e) {

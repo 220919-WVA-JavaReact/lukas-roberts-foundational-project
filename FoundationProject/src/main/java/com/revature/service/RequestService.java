@@ -23,9 +23,14 @@ public class RequestService {
 
     public void viewMyOpenRequests(Employee employee) {
         List<Request> requests = rd.viewMyOpenRequests(employee);
-        for (Request request : requests) {
-            System.out.println(request);
+        if (requests.size() > 0) {
+            for (Request request : requests) {
+                System.out.println(request);
+            }
+        } else {
+            System.out.println("You have no pending requests.");
         }
+
     }
 
     public void viewAllOpenRequests(Employee employee) {
@@ -38,22 +43,30 @@ public class RequestService {
     public void getRequestsByEmployeeId(int employeeId) {
         List<Request> requests = rd.getRequestsByEmployeeId(employeeId);
         for (Request request : requests) {
-            System.out.println(request);
+            System.out.println(request.getApprovalStatus() + " reimbursement request from: " + request.getEmployee().getFirst() + " " + request.getEmployee().getLast());
+            System.out.println("        Amount of request: $" + request.getPrice());
+            System.out.println("        Reason for request: " + request.getDescription());
+            System.out.println("----------------------------------------------------------------------------------------------------------");
         }
     }
 
     public Request updateRequest(int id, Employee employee) {
-        if(getRequestById(id).getEmployee().getId() != employee.getId()) {
-            String approvalStatus = "Denied";
-            System.out.println("     1) Approve.");
-            System.out.println("     2) Deny.");
-            int status = sc.nextInt();
-            if (status == 1) {
-                approvalStatus = "Approved";
+        Request request = getRequestById(id);
+        if (request.getApprovalStatus().equals("Pending")) {
+            if (request.getEmployee().getId() != employee.getId()) {
+                String approvalStatus = "Denied";
+                System.out.println("     1) Approve.");
+                System.out.println("     2) Deny.");
+                int status = sc.nextInt();
+                if (status == 1) {
+                    approvalStatus = "Approved";
+                }
+                request = rd.updateRequest(id, approvalStatus, request.getEmployee());
+            } else {
+                System.out.println("Nice try :) Managers are not allowed to approve or deny their own requests.");
             }
-            Request request = rd.updateRequest(id, approvalStatus);
         } else {
-            System.out.println("Nice try :) Managers are not allowed to approve or deny their own requests.");
+            System.out.println("That request has already been dealt with.");
         }
         return null;
     }

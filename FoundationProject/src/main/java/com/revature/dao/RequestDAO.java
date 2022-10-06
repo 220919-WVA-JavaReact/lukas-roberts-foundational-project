@@ -13,7 +13,7 @@ public interface RequestDAO {
 
     List<Request> getRequestsByEmployeeId(int id);
 
-    Request updateRequest(int id, String approvalStatus);
+    Request updateRequest(int id, String approvalStatus, Employee employee);
 
     Request getRequestById(int id);
 }

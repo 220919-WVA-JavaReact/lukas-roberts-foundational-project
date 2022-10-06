@@ -18,14 +18,16 @@ public class App {
         Employee loggedInEmployee = null;
         if (choice == 1) {
             loggedInEmployee = es.login();
+            System.out.println("Welcome back, " + loggedInEmployee.getFirst() + "!");
         } else if (choice == 2) {
             loggedInEmployee = es.register();
+            System.out.println("Hello, " + loggedInEmployee.getFirst() + "! Thank you for joining the team!");
         }
 
         while (loggedInEmployee != null) {
             if (loggedInEmployee.isManager()) {
                 System.out.println("----------------------------------------------------------------------------------------------------------");
-                System.out.println("Main Menu: Welcome back, " + loggedInEmployee.getFirst() + "!");
+                System.out.println("Main Menu:");
                 System.out.println("     1) View a specific request(request id required).");
                 System.out.println("     2) View all pending requests.");
                 System.out.println("     3) Update a request(request id required).");
@@ -59,16 +61,20 @@ public class App {
                         break;
                 }
             } else {
-                System.out.println("Main Menu: Welcome back, " + loggedInEmployee.getFirst() + "!");
+                System.out.println("----------------------------------------------------------------------------------------------------------");
+                System.out.println("Main Menu:");
                 System.out.println("     1) Create a reimbursement request.");
                 System.out.println("     2) View your pending requests.");
                 System.out.println("     3) Quit.");
+                System.out.println("----------------------------------------------------------------------------------------------------------");
                 choice = sc.nextInt();
                 switch (choice) {
                     case 1:
                         rs.createRequest(loggedInEmployee);
+                        break;
                     case 2:
                         rs.viewMyOpenRequests(loggedInEmployee);
+                        break;
                     case 3:
                         System.out.println("Have a good day, " + loggedInEmployee.getFirst() + "!");
                         loggedInEmployee = null;
