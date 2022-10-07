@@ -94,6 +94,38 @@ public class RequestDAOImplPostgres implements RequestDAO{
     }
 
     @Override
+    public List<Request> viewRequestsByStatus(String status) {
+        List<Request> requests = new ArrayList<>();
+        Employee emp = new Employee();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE approval_status = ? ORDER BY id";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, status);
+            ResultSet rs;
+            if ((rs = ps.executeQuery()) != null) {
+                while (rs.next()) {
+                    int requestId = rs.getInt("id");
+                    double price = rs.getDouble("price");
+                    String description = rs.getString("description");
+                    String approvalStatus = rs.getString("approval_status");
+                    boolean completed = rs.getBoolean("completed");
+                    emp.setId(rs.getInt("employee_id"));
+                    emp.setFirst(rs.getString("first"));
+                    emp.setLast(rs.getString("last"));
+                    emp.setUsername(rs.getString("username"));
+                    emp.setPassword(rs.getString("password"));
+                    emp.setManager(rs.getBoolean("manager"));
+                    Request request = new Request(requestId, price, description, approvalStatus, completed, emp);
+                    requests.add(request);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return requests;
+    }
+
+    @Override
     public List<Request> getRequestsByEmployeeId(int id) {
         Employee emp = new Employee();
         List<Request> requests = new ArrayList<>();

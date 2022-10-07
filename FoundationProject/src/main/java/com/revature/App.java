@@ -30,6 +30,7 @@ public class App {
                 System.out.println("Main Menu:");
                 System.out.println("     1) View a specific request(request id required).");
                 System.out.println("     2) View all pending requests.");
+                System.out.println("     3) V");
                 System.out.println("     3) Update a request(request id required).");
                 System.out.println("     4) View all requests of a specific employee(employee id required).");
                 System.out.println("     5) Quit.");
@@ -45,17 +46,20 @@ public class App {
                         rs.viewAllRequests(loggedInEmployee);
                         break;
                     case 3:
+                        rs.viewRequestsByStatus();
+                        break;
+                    case 4:
                         System.out.println("Please enter the id of the request you wish update.");
                         System.out.println("*** Managers can't approve or deny their own requests. ***");
                         id = sc.nextInt();
                         rs.updateRequest(id, loggedInEmployee);
                         break;
-                    case 4:
+                    case 5:
                         System.out.println("What is the id of the employee whose requests you want to see?");
                         id = sc.nextInt();
                         rs.getRequestsByEmployeeId(id);
                         break;
-                    case 5:
+                    case 6:
                         System.out.println("Have a good day, " + loggedInEmployee.getFirst() + "!");
                         loggedInEmployee = null;
                         break;

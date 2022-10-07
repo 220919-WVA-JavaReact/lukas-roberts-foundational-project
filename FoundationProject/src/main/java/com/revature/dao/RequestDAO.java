@@ -11,6 +11,8 @@ public interface RequestDAO {
 
     List<Request> viewAllRequests(Employee employee);
 
+    List<Request> viewRequestsByStatus(String status);
+
     List<Request> getRequestsByEmployeeId(int id);
 
     Request updateRequest(int id, String approvalStatus, Employee employee);
