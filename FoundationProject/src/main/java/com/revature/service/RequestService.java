@@ -22,10 +22,10 @@ public class RequestService {
     }
 
     public void viewMyOpenRequests(Employee employee) {
-        List<Request> requests = rd.viewMyOpenRequests(employee);
+        List<Request> requests = rd.viewMyPendingRequests(employee);
         if (requests.size() > 0) {
             for (Request request : requests) {
-                System.out.println(request);
+                System.out.println("Request Id: " + request.getId() + " | Amount:  $" + request.getPrice() + " | Description: " + request.getDescription());
             }
         } else {
             System.out.println("You have no pending requests.");
@@ -33,10 +33,27 @@ public class RequestService {
 
     }
 
-    public void viewAllOpenRequests(Employee employee) {
-        List<Request> requests = rd.viewAllOpenRequests(employee);
-        for (Request request : requests) {
-            System.out.println(request.getEmployee().getFirst() + " " + request.getEmployee().getLast() + ":  $" + request.getPrice() + " : " + request.getDescription());
+    public void viewAllRequests(Employee employee) {
+        List<Request> requests = rd.viewAllRequests(employee);
+        System.out.println("Press 1 to update requests. Press 2 to filter requests by status.");
+        int choice = sc.nextInt();
+        if (choice == 1) {
+            for (Request request : requests) {
+//                System.out.println(request);
+//                System.out.println(request.getEmployee().getFirst() + " " + request.getEmployee().getLast() + ":  $" + request.getPrice() + " : " + request.getDescription());
+                updateRequest(request.getId(), request.getEmployee());
+                System.out.println("     1) View and update the next request.");
+                System.out.println("     2) Main menu.");
+                choice = sc.nextInt();
+                while (choice != 1 && choice != 2) {
+                    System.out.println("Invalid option.");
+                    System.out.println("     1) View and update the next request.");
+                    System.out.println("     2) Main menu.");
+                }
+                if (choice != 1) {
+                    break;
+                }
+            }
         }
     }
 
@@ -62,6 +79,10 @@ public class RequestService {
                     approvalStatus = "Approved";
                 }
                 request = rd.updateRequest(id, approvalStatus, request.getEmployee());
+                if (!request.getApprovalStatus().equals("Pending")) {
+                    System.out.println(request);
+                    System.out.println("Request has been updated successfully");
+                }
             } else {
                 System.out.println("Nice try :) Managers are not allowed to approve or deny their own requests.");
             }

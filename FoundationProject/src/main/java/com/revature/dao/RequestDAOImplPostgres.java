@@ -37,10 +37,10 @@ public class RequestDAOImplPostgres implements RequestDAO{
     }
 
     @Override
-    public List<Request> viewMyOpenRequests(Employee employee) {
+    public List<Request> viewMyPendingRequests(Employee employee) {
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM requests WHERE employee_id = ?";
+            String sql = "SELECT * FROM requests WHERE employee_id = ? AND approval_status = 'Pending' ORDER BY id";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, employee.getId());
             ResultSet rs;
@@ -62,7 +62,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
     }
 
     @Override
-    public List<Request> viewAllOpenRequests(Employee employee) {
+    public List<Request> viewAllRequests(Employee employee) {
         List<Request> requests = new ArrayList<>();
         Employee emp = new Employee();
         try (Connection conn = ConnectionUtil.getConnection()) {
@@ -80,7 +80,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     emp.setId(rs.getInt("employee_id"));
                     emp.setFirst(rs.getString("first"));
                     emp.setLast(rs.getString("last"));
-                    emp.setEmail(rs.getString("email"));
+                    emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
                     emp.setManager(rs.getBoolean("manager"));
                     Request request = new Request(requestId, price, description, approvalStatus, completed, emp);
@@ -98,7 +98,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
         Employee emp = new Employee();
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE employee_id = ?";
+            String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE employee_id = ? ORDER BY id";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
             ResultSet rs;
@@ -112,7 +112,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     emp.setId(rs.getInt("employee_id"));
                     emp.setFirst(rs.getString("first"));
                     emp.setLast(rs.getString("last"));
-                    emp.setEmail(rs.getString("email"));
+                    emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
                     emp.setManager(rs.getBoolean("manager"));
                     Request request = new Request(requestId, price, description, approvalStatus, completed, emp);
@@ -147,7 +147,6 @@ public class RequestDAOImplPostgres implements RequestDAO{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return request;
     }
 
@@ -170,7 +169,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                 emp.setId(rs.getInt("employee_id"));
                 emp.setFirst(rs.getString("first"));
                 emp.setLast(rs.getString("last"));
-                emp.setEmail(rs.getString("email"));
+                emp.setUsername(rs.getString("username"));
                 emp.setPassword(rs.getString("password"));
                 emp.setManager(rs.getBoolean("manager"));
                 request = new Request(requestId, price, description, approvalStatus, completed, emp);

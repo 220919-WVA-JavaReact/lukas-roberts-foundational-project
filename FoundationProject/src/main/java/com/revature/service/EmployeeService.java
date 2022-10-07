@@ -11,11 +11,11 @@ public class EmployeeService {
     Scanner sc = new Scanner(System.in);
 
     public Employee login() {
-        System.out.println("Please enter your email.");
-        String email = sc.nextLine();
+        System.out.println("Please enter your username.");
+        String username = sc.nextLine();
         System.out.println("Please enter your password.");
         String password = sc.nextLine();
-        Employee employee = ed.getEmployeeByEmail(email);
+        Employee employee = ed.getEmployeeByUsername(username);
         if (password.equals(employee.getPassword())) {
             System.out.println("You have been successfully logged in!");
             return employee;
@@ -30,13 +30,10 @@ public class EmployeeService {
         String first = sc.nextLine();
         System.out.println("Please enter your last name.");
         String last = sc.nextLine();
-        System.out.println("Please enter your email address.");
-        String email = sc.nextLine();
+        System.out.println("Please create a username.");
+        String username = sc.nextLine();
         System.out.println("Please create a password.");
         String password = sc.nextLine();
-        System.out.println("Are you a manager? Press 1 for yes. Press 2 for no.");
-        int manager = sc.nextInt();
-        boolean bool = manager == 1;
-        return ed.createEmployee(first, last, email, password, bool);
+        return ed.createEmployee(first, last, username, password);
     }
 }

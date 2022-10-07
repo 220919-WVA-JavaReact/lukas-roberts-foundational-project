@@ -42,7 +42,7 @@ public class App {
                         rs.getRequestById(id);
                         break;
                     case 2:
-                        rs.viewAllOpenRequests(loggedInEmployee);
+                        rs.viewAllRequests(loggedInEmployee);
                         break;
                     case 3:
                         System.out.println("Please enter the id of the request you wish update.");

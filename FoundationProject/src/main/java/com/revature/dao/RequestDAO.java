@@ -7,9 +7,9 @@ import java.util.List;
 public interface RequestDAO {
     Request createRequest(Employee employee, double price, String description);
 
-    List<Request> viewMyOpenRequests(Employee employee);
+    List<Request> viewMyPendingRequests(Employee employee);
 
-    List<Request> viewAllOpenRequests(Employee employee);
+    List<Request> viewAllRequests(Employee employee);
 
     List<Request> getRequestsByEmployeeId(int id);
 

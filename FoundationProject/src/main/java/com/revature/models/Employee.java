@@ -7,23 +7,23 @@ public class Employee {
     private int id;
     private String first;
     private String last;
-    private String email;
+    private String username;
     private String password;
     private boolean manager;
 
-    public Employee(int id, String first, String last, String email, String password, boolean manager) {
+    public Employee(int id, String first, String last, String username, String password, boolean manager) {
         this.id = id;
         this.first = first;
         this.last = last;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.manager = manager;
     }
 
-    public Employee(String first, String last, String email, String password) {
+    public Employee(String first, String last, String username, String password) {
         this.first = first;
         this.last = last;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.manager = false;
     }
@@ -55,12 +55,12 @@ public class Employee {
         this.last = last;
     }
 
-    public String getEmail() {
-        return this.email;
+    public String getUsername() {
+        return this.username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -85,7 +85,7 @@ public class Employee {
                 "id=" + id +
                 ", first='" + first + '\'' +
                 ", last='" + last + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", manager=" + manager +
                 '}';
@@ -96,11 +96,11 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id && manager == employee.manager && first.equals(employee.first) && last.equals(employee.last) && email.equals(employee.email) && password.equals(employee.password);
+        return id == employee.id && manager == employee.manager && first.equals(employee.first) && last.equals(employee.last) && username.equals(employee.username) && password.equals(employee.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, first, last, email, password, manager);
+        return Objects.hash(id, first, last, username, password, manager);
     }
 }
