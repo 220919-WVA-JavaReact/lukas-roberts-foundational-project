@@ -48,12 +48,13 @@ public class RequestService {
             System.out.println("      Request Description: " + request.getDescription());
             System.out.println("----------------------------------------------------------------------------------------------------------");
         }
+    }
 //        System.out.println("Press 1 to update requests. Press 2 to filter requests by status.");
 //        int choice = sc.nextInt();
 //        if (choice == 1) {
 //            for (Request request : requests) {
-////                System.out.println(request);
-////                System.out.println(request.getEmployee().getFirst() + " " + request.getEmployee().getLast() + ":  $" + request.getPrice() + " : " + request.getDescription());
+//                System.out.println(request);
+//                System.out.println(request.getEmployee().getFirst() + " " + request.getEmployee().getLast() + ":  $" + request.getPrice() + " : " + request.getDescription());
 //                if (request.getApprovalStatus().equals("Pending")) {
 //                    updateRequest(request.getId(), request.getEmployee());
 //                    System.out.println("     1) View and update the next request.");
@@ -71,7 +72,7 @@ public class RequestService {
 //
 //            }
 //        }
-    }
+
     public void viewRequestsByStatus() {
         System.out.println("Please choose a status option below. To quit to main menu press 4.");
         System.out.println("     1) Pending.");
@@ -122,7 +123,7 @@ public class RequestService {
         }
     }
 
-    public Request updateRequest(int id, Employee employee) {
+    public void updateRequest(int id, Employee employee) {
         Request request = getRequestById(id);
         if (request.getApprovalStatus().equals("Pending")) {
             if (request.getEmployee().getId() != employee.getId()) {
@@ -144,7 +145,6 @@ public class RequestService {
         } else {
             System.out.println("That request has already been dealt with.");
         }
-        return null;
     }
 
     public Request getRequestById(int id) {
