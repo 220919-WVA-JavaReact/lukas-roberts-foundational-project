@@ -1,6 +1,6 @@
 package com.revature.models;
 
-public enum Hierarchy {
+public enum EmployeeType {
     Associate,
     Manager,
     Director

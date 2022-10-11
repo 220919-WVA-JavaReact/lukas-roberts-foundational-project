@@ -14,13 +14,15 @@ public class RequestService {
         System.out.println("Enter an amount for reimbursement.");
         double price = sc.nextDouble();
         while (price <= 0) {
+            System.out.println("Ammount cannot be less than or equal to zero.");
             System.out.println("Enter an amount for reimbursement.");
             price = sc.nextDouble();
         }
         sc.nextLine();
         System.out.println("Please describe the reason for your request.");
         String description = sc.nextLine();
-        while (description.equals("")) {
+        while (description.trim().equals("")) {
+            System.out.println("Description cannot be left blank.");
             System.out.println("Please describe the reason for your request.");
             description = sc.nextLine();
         }
@@ -32,6 +34,7 @@ public class RequestService {
         System.out.println("     4) Other.");
         int choice = sc.nextInt();
         while (choice != 1 && choice != 2 && choice != 3 && choice != 4) {
+            System.out.println("Not an option. Please choose from the options below.");
             System.out.println("What type of request is this?");
             System.out.println("     1) Travel.");
             System.out.println("     2) Lodging.");

@@ -1,6 +1,7 @@
 package com.revature.dao;
 
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
 import com.revature.models.Request;
 import com.revature.util.ConnectionUtil;
 
@@ -113,7 +114,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     emp.setLast(rs.getString("last"));
                     emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
-                    emp.setManager(rs.getBoolean("manager"));
+                    emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
                     Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
@@ -146,7 +147,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     emp.setLast(rs.getString("last"));
                     emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
-                    emp.setManager(rs.getBoolean("manager"));
+                    emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
                     Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
@@ -179,7 +180,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     emp.setLast(rs.getString("last"));
                     emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
-                    emp.setManager(rs.getBoolean("manager"));
+                    emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
                     Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
@@ -239,7 +240,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
                 emp.setLast(rs.getString("last"));
                 emp.setUsername(rs.getString("username"));
                 emp.setPassword(rs.getString("password"));
-                emp.setManager(rs.getBoolean("manager"));
+                emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
                 request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
             }
         } catch (SQLException e) {

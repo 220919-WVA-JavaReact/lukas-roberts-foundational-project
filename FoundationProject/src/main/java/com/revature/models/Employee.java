@@ -13,9 +13,9 @@ public class Employee {
     private int zip;
     private String username;
     private String password;
-    private boolean manager;
+    private EmployeeType employeeLevel;
 
-    public Employee(int id, String first, String last, String address1, String address2, String city, String state, int zip, String username, String password, boolean manager) {
+    public Employee(int id, String first, String last, String address1, String address2, String city, String state, int zip, String username, String password, EmployeeType employeeLevel) {
         this.id = id;
         this.first = first;
         this.last = last;
@@ -26,7 +26,7 @@ public class Employee {
         this.zip = zip;
         this.username = username;
         this.password = password;
-        this.manager = manager;
+        this.employeeLevel = employeeLevel;
     }
 
     public Employee(String first, String last, String address1, String address2, String city, String state, int zip, String username, String password) {
@@ -124,12 +124,12 @@ public class Employee {
         this.password = password;
     }
 
-    public boolean isManager() {
-        return manager;
+    public EmployeeType getEmployeeLevel() {
+        return employeeLevel;
     }
 
-    public void setManager(boolean manager) {
-        this.manager = manager;
+    public void setEmployeeLevel(EmployeeType employeeLevel) {
+        this.employeeLevel = employeeLevel;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class Employee {
                 ", zip=" + zip +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", manager=" + manager +
+                ", employeeLevel=" + employeeLevel +
                 '}';
     }
 
@@ -154,11 +154,11 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id && zip == employee.zip && manager == employee.manager && first.equals(employee.first) && last.equals(employee.last) && address1.equals(employee.address1) && address2.equals(employee.address2) && city.equals(employee.city) && state.equals(employee.state) && username.equals(employee.username) && password.equals(employee.password);
+        return id == employee.id && zip == employee.zip && first.equals(employee.first) && last.equals(employee.last) && address1.equals(employee.address1) && address2.equals(employee.address2) && city.equals(employee.city) && state.equals(employee.state) && username.equals(employee.username) && password.equals(employee.password) && employeeLevel == employee.employeeLevel;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, first, last, address1, address2, city, state, zip, username, password, manager);
+        return Objects.hash(id, first, last, address1, address2, city, state, zip, username, password, employeeLevel);
     }
 }

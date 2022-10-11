@@ -1,6 +1,7 @@
 package com.revature.dao;
 
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
 import com.revature.util.ConnectionUtil;
 
 import java.sql.*;
@@ -26,8 +27,8 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
                 int receivedZip = rs.getInt("zip");
                 String receivedUsername = rs.getString("username");
                 String receivedPassword = rs.getString("password");
-                boolean receivedManager = rs.getBoolean("manager");
-                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedManager);
+                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedEmployeeLevel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,7 +41,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     public Employee createEmployee(String first, String last, String address_1, String address_2, String city, String state, int zip, String username, String password) {
         Employee employee = new Employee();
         try(Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "INSERT INTO employees (first, last, address_1, address_2, city, state, zip, username, password, manager) VALUES (?,?,?,?,?,?,?,?,?,?) RETURNING *";
+            String sql = "INSERT INTO employees (first, last, address_1, address_2, city, state, zip, username, password, employee_level) VALUES (?,?,?,?,?,?,?,?,?,?::employee_type) RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, first);
             ps.setString(2, last);
@@ -51,7 +52,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
             ps.setInt(7, zip);
             ps.setString(8, username);
             ps.setString(9, password);
-            ps.setBoolean(10, false);
+            ps.setString(10, EmployeeType.Associate.toString());
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 rs.next();
@@ -65,8 +66,8 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
                 int receivedZip = rs.getInt("zip");
                 String receivedUsername = rs.getString("username");
                 String receivedPassword = rs.getString("password");
-                boolean receivedManager = rs.getBoolean("manager");
-                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedManager);
+                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedEmployeeLevel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,8 +101,8 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
                 int receivedZip = rs.getInt("zip");
                 String receivedUsername = rs.getString("username");
                 String receivedPassword = rs.getString("password");
-                boolean receivedManager = rs.getBoolean("manager");
-                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedManager);
+                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedEmployeeLevel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -131,8 +132,8 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
                 int receivedZip = rs.getInt("zip");
                 String receivedUsername = rs.getString("username");
                 String receivedPassword = rs.getString("password");
-                boolean receivedManager = rs.getBoolean("manager");
-                newEmployee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedManager);
+                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                newEmployee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedEmployeeLevel);
             }
         } catch (SQLException e) {
             e.printStackTrace();
