@@ -5,31 +5,35 @@ import java.util.Objects;
 public class Request {
     // id reference
     private int id;
-//    private int employeeId;
+    private Employee employee;
     private double price;
     private String description;
-    private String approvalStatus = "Pending";
-    private boolean completed = false;
+    private String approvalStatus;
+    private boolean completed;
 
-    private Employee employee;
+    private String type;
+
+
 
     public Request() {
 
     }
 
-    public Request(double price, String description, Employee employee) {
+    public Request(Employee employee, double price, String description, String type ) {
+        this.employee = employee;
         this.price = price;
         this.description = description;
-        this.employee = employee;
+        this.type = type;
     }
 
-    public Request(int id, double price, String description, String approvalStatus, boolean completed, Employee employee) {
+    public Request(int id, Employee employee, double price, String description, String type, String approvalStatus, boolean completed) {
         this.id = id;
+        this.employee = employee;
         this.price = price;
         this.description = description;
+        this.type = type;
         this.approvalStatus = approvalStatus;
         this.completed = completed;
-        this.employee = employee;
     }
 
     public int getId() {
@@ -64,6 +68,14 @@ public class Request {
         this.description = description;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getApprovalStatus() {
         return approvalStatus;
     }
@@ -82,12 +94,14 @@ public class Request {
 
     @Override
     public String toString() {
-        return "ReimbursementRequest{" +
-                "employeeId=" + employee +
+        return "Request{" +
+                "id=" + id +
+                ", employee=" + employee +
                 ", price=" + price +
                 ", description='" + description + '\'' +
-                ", approved=" + approvalStatus +
+                ", approvalStatus='" + approvalStatus + '\'' +
                 ", completed=" + completed +
+                ", type='" + type + '\'' +
                 '}';
     }
 
@@ -95,12 +109,12 @@ public class Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Request that = (Request) o;
-        return Double.compare(that.price, price) == 0 && approvalStatus == that.approvalStatus && completed == that.completed && description.equals(that.description);
+        Request request = (Request) o;
+        return id == request.id && Double.compare(request.price, price) == 0 && completed == request.completed && employee.equals(request.employee) && description.equals(request.description) && approvalStatus.equals(request.approvalStatus) && type.equals(request.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(price, description, approvalStatus, completed);
+        return Objects.hash(id, employee, price, description, approvalStatus, completed, type);
     }
 }

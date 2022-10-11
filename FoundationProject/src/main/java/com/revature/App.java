@@ -55,15 +55,17 @@ public class App {
                     System.out.println("Main Menu:");
                     System.out.println();
                     System.out.println("     1) View a specific request(request id required).");
-                    System.out.println("     2) View all pending requests.");
-                    System.out.println("     3) View all requests by status.");
+                    System.out.println("     2) View all requests.");
+                    System.out.println("     3) View requests by status.");
                     System.out.println("     4) Update a request(request id required).");
                     System.out.println("     5) View all requests of a specific employee(employee id required).");
+                    System.out.println("     6) Update your address.");
+                    System.out.println("     7) Change your password.");
                     System.out.println();
-                    System.out.println("Press 6 to logout.");
+                    System.out.println("Press 8 to logout.");
                     System.out.println("----------------------------------------------------------------------------------------------------------");
                     choice = sc.nextInt();
-                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6) {
+                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8) {
                         System.out.println("Invalid Option.");
                         System.out.println();
                         System.out.println("     1) View a specific request(request id required).");
@@ -71,16 +73,16 @@ public class App {
                         System.out.println("     3) View all requests by status.");
                         System.out.println("     4) Update a request(request id required).");
                         System.out.println("     5) View all requests of a specific employee(employee id required).");
+                        System.out.println("     6) Update your address.");
+                        System.out.println("     7) Change your password.");
                         System.out.println();
-                        System.out.println("Press 6 to logout.");
+                        System.out.println("Press 8 to logout.");
                         System.out.println("----------------------------------------------------------------------------------------------------------");
                         choice = sc.nextInt();
                     }
                     switch (choice) {
                         case 1:
-                            System.out.println("Please enter the id of the request you wish to see.");
-                            id = sc.nextInt();
-                            rs.getRequestById(id);
+                            rs.getRequestById();
                             break;
                         case 2:
                             rs.viewAllRequests(loggedInEmployee);
@@ -89,10 +91,7 @@ public class App {
                             rs.viewRequestsByStatus();
                             break;
                         case 4:
-                            System.out.println("Please enter the id of the request you wish update.");
-                            System.out.println("*** Managers can't approve or deny their own requests. ***");
-                            id = sc.nextInt();
-                            rs.updateRequest(id, loggedInEmployee);
+                            rs.updateRequest(loggedInEmployee);
                             break;
                         case 5:
                             System.out.println("What is the id of the employee whose requests you want to see?");
@@ -100,6 +99,12 @@ public class App {
                             rs.getRequestsByEmployeeId(id);
                             break;
                         case 6:
+                            es.updateEmployeeAddress(loggedInEmployee);
+                            break;
+                        case 7:
+                            es.changePassword(loggedInEmployee);
+                            break;
+                        case 8:
                             System.out.println("Have a good day, " + loggedInEmployee.getFirst() + "!");
                             loggedInEmployee = null;
                             break;
@@ -112,17 +117,23 @@ public class App {
                     System.out.println();
                     System.out.println("     1) Create a reimbursement request.");
                     System.out.println("     2) View your pending requests.");
+                    System.out.println("     3) View your requests by type.");
+                    System.out.println("     4) Update your information.");
+                    System.out.println("     5) Change your password.");
                     System.out.println();
-                    System.out.println("Press 3 to logout");
+                    System.out.println("Press 6 to logout");
                     System.out.println("----------------------------------------------------------------------------------------------------------");
                     choice = sc.nextInt();
-                    while (choice != 1 && choice != 2 && choice != 3) {
+                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6) {
                         System.out.println("Invalid option. Menu options are selected by entering the number of the option you wish to select.");
                         System.out.println();
                         System.out.println("     1) Create a reimbursement request.");
                         System.out.println("     2) View your pending requests.");
+                        System.out.println("     3) View your requests by type.");
+                        System.out.println("     4) Update your address.");
+                        System.out.println("     5) Change your password.");
                         System.out.println();
-                        System.out.println("Press 3 to logout");
+                        System.out.println("Press 6 to logout");
                         System.out.println("----------------------------------------------------------------------------------------------------------");
                         choice = sc.nextInt();
                     }
@@ -134,6 +145,15 @@ public class App {
                             rs.viewMyOpenRequests(loggedInEmployee);
                             break;
                         case 3:
+                            rs.viewMyRequestsByType(loggedInEmployee);
+                            break;
+                        case 4:
+                            es.updateEmployeeAddress(loggedInEmployee);
+                            break;
+                        case 5:
+                            es.changePassword(loggedInEmployee);
+                            break;
+                        case 6:
                             System.out.println("Have a good day, " + loggedInEmployee.getFirst() + "!");
                             loggedInEmployee = null;
                             break;

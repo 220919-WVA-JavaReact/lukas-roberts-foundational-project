@@ -3,29 +3,42 @@ package com.revature.models;
 import java.util.Objects;
 
 public class Employee {
-    // employee id
     private int id;
     private String first;
     private String last;
+    private String address1;
+    private String address2;
+    private String city;
+    private String state;
+    private int zip;
     private String username;
     private String password;
     private boolean manager;
 
-    public Employee(int id, String first, String last, String username, String password, boolean manager) {
+    public Employee(int id, String first, String last, String address1, String address2, String city, String state, int zip, String username, String password, boolean manager) {
         this.id = id;
         this.first = first;
         this.last = last;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
         this.username = username;
         this.password = password;
         this.manager = manager;
     }
 
-    public Employee(String first, String last, String username, String password) {
+    public Employee(String first, String last, String address1, String address2, String city, String state, int zip, String username, String password) {
         this.first = first;
         this.last = last;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.city = city;
+        this.state = state;
+        this.zip = zip;
         this.username = username;
         this.password = password;
-        this.manager = false;
     }
 
     public Employee() {
@@ -53,6 +66,46 @@ public class Employee {
 
     public void setLast(String last) {
         this.last = last;
+    }
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public int getZip() {
+        return zip;
+    }
+
+    public void setZip(int zip) {
+        this.zip = zip;
     }
 
     public String getUsername() {
@@ -85,7 +138,12 @@ public class Employee {
                 "id=" + id +
                 ", first='" + first + '\'' +
                 ", last='" + last + '\'' +
-                ", email='" + username + '\'' +
+                ", address1='" + address1 + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zip=" + zip +
+                ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", manager=" + manager +
                 '}';
@@ -96,11 +154,11 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id && manager == employee.manager && first.equals(employee.first) && last.equals(employee.last) && username.equals(employee.username) && password.equals(employee.password);
+        return id == employee.id && zip == employee.zip && manager == employee.manager && first.equals(employee.first) && last.equals(employee.last) && address1.equals(employee.address1) && address2.equals(employee.address2) && city.equals(employee.city) && state.equals(employee.state) && username.equals(employee.username) && password.equals(employee.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, first, last, username, password, manager);
+        return Objects.hash(id, first, last, address1, address2, city, state, zip, username, password, manager);
     }
 }

@@ -5,5 +5,9 @@ import com.revature.models.Employee;
 public interface EmployeeDAO {
     Employee getEmployeeByUsername(String username);
 
-    Employee createEmployee(String first, String last, String username, String password);
+    Employee createEmployee(String first, String last, String address_1, String address_2, String city, String state, int zip, String username, String password);
+
+    Employee updateEmployeeAddress(int employeeId, String address1, String unit, String city, String state, int zip);
+
+    Employee changePassword(Employee employee, String password);
 }

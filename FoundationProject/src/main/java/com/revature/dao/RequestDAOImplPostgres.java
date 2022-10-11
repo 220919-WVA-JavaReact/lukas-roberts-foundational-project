@@ -10,25 +10,27 @@ import java.util.List;
 
 public class RequestDAOImplPostgres implements RequestDAO{
     @Override
-    public Request createRequest(Employee employee, double price, String description) {
+    public Request createRequest(Employee employee, double price, String description, String type) {
         Request request = new Request();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "INSERT INTO requests (employee_id, price, description, approval_status, completed) VALUES (?,?,?,?,?) RETURNING *";
+            String sql = "INSERT INTO requests (employee_id, price, description, type, approval_status, completed) VALUES (?,?,?,?,?,?) RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, employee.getId());
             ps.setDouble(2, price);
             ps.setString(3, description);
-            ps.setString(4, "Pending");
-            ps.setBoolean(5, false);
+            ps.setString(4, type);
+            ps.setString(5, "Pending");
+            ps.setBoolean(6, false);
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 rs.next();
-                int id = rs.getInt("id");
+                int receivedId = rs.getInt("id");
                 double receivedPrice = rs.getDouble("price");
                 String receivedDescription = rs.getString("description");
-                String approvalStatus = rs.getString("approval_status");
-                boolean completed = rs.getBoolean("completed");
-                request =  new Request(id, receivedPrice, receivedDescription, approvalStatus, completed, employee);
+                String receivedType = rs.getString("type");
+                String receivedApproval = rs.getString("approval_status");
+                boolean receivedCompleted = rs.getBoolean("completed");
+                request = new Request(receivedId, employee, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,12 +48,40 @@ public class RequestDAOImplPostgres implements RequestDAO{
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 while (rs.next()) {
-                    int requestId = rs.getInt("id");
-                    double price = rs.getDouble("price");
-                    String description = rs.getString("description");
-                    String approvalStatus = rs.getString("approval_status");
-                    boolean completed = rs.getBoolean("completed");
-                    Request request = new Request(requestId, price, description, approvalStatus, completed, employee);
+                    int receivedId = rs.getInt("id");
+                    double receivedPrice = rs.getDouble("price");
+                    String receivedDescription = rs.getString("description");
+                    String receivedType = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+                    boolean receivedCompleted = rs.getBoolean("completed");
+                    Request request = new Request(receivedId, employee, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
+                    requests.add(request);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return requests;
+    }
+
+    @Override
+    public List<Request> viewMyRequestsByType(Employee employee, String type) {
+        List<Request> requests = new ArrayList<>();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM requests WHERE employee_id = ? AND type = ? ORDER BY id";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, employee.getId());
+            ps.setString(2, type);
+            ResultSet rs;
+            if ((rs = ps.executeQuery()) != null) {
+                while (rs.next()) {
+                    int receivedId = rs.getInt("id");
+                    double receivedPrice = rs.getDouble("price");
+                    String receivedDescription = rs.getString("description");
+                    String receivedType = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+                    boolean receivedCompleted = rs.getBoolean("completed");
+                    Request request = new Request(receivedId, employee, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -66,24 +96,25 @@ public class RequestDAOImplPostgres implements RequestDAO{
         List<Request> requests = new ArrayList<>();
         Employee emp = new Employee();
         try (Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "SELECT * FROM requests r NATURAL JOIN employees e WHERE r.employee_id != ? AND r.completed = false";
+            String sql = "SELECT * FROM requests r NATURAL JOIN employees e WHERE r.employee_id != ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, employee.getId());
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 while (rs.next()) {
-                    int requestId = rs.getInt("id");
-                    double price = rs.getDouble("price");
-                    String description = rs.getString("description");
-                    String approvalStatus = rs.getString("approval_status");
-                    boolean completed = rs.getBoolean("completed");
+                    int receivedId = rs.getInt("id");
+                    double receivedPrice = rs.getDouble("price");
+                    String receivedDescription = rs.getString("description");
+                    String receivedType = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+                    boolean receivedCompleted = rs.getBoolean("completed");
                     emp.setId(rs.getInt("employee_id"));
                     emp.setFirst(rs.getString("first"));
                     emp.setLast(rs.getString("last"));
                     emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
                     emp.setManager(rs.getBoolean("manager"));
-                    Request request = new Request(requestId, price, description, approvalStatus, completed, emp);
+                    Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -104,18 +135,19 @@ public class RequestDAOImplPostgres implements RequestDAO{
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 while (rs.next()) {
-                    int requestId = rs.getInt("id");
-                    double price = rs.getDouble("price");
-                    String description = rs.getString("description");
-                    String approvalStatus = rs.getString("approval_status");
-                    boolean completed = rs.getBoolean("completed");
+                    int receivedId = rs.getInt("id");
+                    double receivedPrice = rs.getDouble("price");
+                    String receivedDescription = rs.getString("description");
+                    String receivedType = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+                    boolean receivedCompleted = rs.getBoolean("completed");
                     emp.setId(rs.getInt("employee_id"));
                     emp.setFirst(rs.getString("first"));
                     emp.setLast(rs.getString("last"));
                     emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
                     emp.setManager(rs.getBoolean("manager"));
-                    Request request = new Request(requestId, price, description, approvalStatus, completed, emp);
+                    Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -136,18 +168,19 @@ public class RequestDAOImplPostgres implements RequestDAO{
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 while (rs.next()) {
-                    int requestId = rs.getInt("id");
-                    double price = rs.getDouble("price");
-                    String description = rs.getString("description");
-                    String approvalStatus = rs.getString("approval_status");
-                    boolean completed = rs.getBoolean("completed");
+                    int receivedId = rs.getInt("id");
+                    double receivedPrice = rs.getDouble("price");
+                    String receivedDescription = rs.getString("description");
+                    String receivedType = rs.getString("type");
+                    String receivedApproval = rs.getString("approval_status");
+                    boolean receivedCompleted = rs.getBoolean("completed");
                     emp.setId(rs.getInt("employee_id"));
                     emp.setFirst(rs.getString("first"));
                     emp.setLast(rs.getString("last"));
                     emp.setUsername(rs.getString("username"));
                     emp.setPassword(rs.getString("password"));
                     emp.setManager(rs.getBoolean("manager"));
-                    Request request = new Request(requestId, price, description, approvalStatus, completed, emp);
+                    Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -170,11 +203,13 @@ public class RequestDAOImplPostgres implements RequestDAO{
             ResultSet rs;
             if((rs = ps.executeQuery()) != null) {
                 rs.next();
-                int requestId = rs.getInt("id");
-                double price = rs.getDouble("price");
-                String description = rs.getString("description");
-                boolean completed = rs.getBoolean("completed");
-                request = new Request(requestId, price, description, approvalStatus, completed, emp);
+                int receivedId = rs.getInt("id");
+                double receivedPrice = rs.getDouble("price");
+                String receivedDescription = rs.getString("description");
+                String receivedType = rs.getString("type");
+                String receivedApproval = rs.getString("approval_status");
+                boolean receivedCompleted = rs.getBoolean("completed");
+                request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -193,18 +228,19 @@ public class RequestDAOImplPostgres implements RequestDAO{
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 rs.next();
-                int requestId = rs.getInt("id");
-                double price = rs.getDouble("price");
-                String description = rs.getString("description");
-                String approvalStatus = rs.getString("approval_status");
-                boolean completed = rs.getBoolean("completed");
+                int receivedId = rs.getInt("id");
+                double receivedPrice = rs.getDouble("price");
+                String receivedDescription = rs.getString("description");
+                String receivedType = rs.getString("type");
+                String receivedApproval = rs.getString("approval_status");
+                boolean receivedCompleted = rs.getBoolean("completed");
                 emp.setId(rs.getInt("employee_id"));
                 emp.setFirst(rs.getString("first"));
                 emp.setLast(rs.getString("last"));
                 emp.setUsername(rs.getString("username"));
                 emp.setPassword(rs.getString("password"));
                 emp.setManager(rs.getBoolean("manager"));
-                request = new Request(requestId, price, description, approvalStatus, completed, emp);
+                request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
             }
         } catch (SQLException e) {
             e.printStackTrace();

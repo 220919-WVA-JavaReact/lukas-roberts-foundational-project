@@ -5,9 +5,11 @@ import com.revature.models.Request;
 import java.util.List;
 
 public interface RequestDAO {
-    Request createRequest(Employee employee, double price, String description);
+    Request createRequest(Employee employee, double price, String description, String type);
 
     List<Request> viewMyPendingRequests(Employee employee);
+
+    List<Request> viewMyRequestsByType(Employee employee, String type);
 
     List<Request> viewAllRequests(Employee employee);
 
