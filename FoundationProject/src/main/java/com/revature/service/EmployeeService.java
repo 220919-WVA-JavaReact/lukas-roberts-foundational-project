@@ -25,6 +25,17 @@ public class EmployeeService {
         }
     }
 
+    public Employee login(String username, String password) {
+        Employee employee = ed.getEmployeeByUsername(username);
+        if (password.equals(employee.getPassword())) {
+            System.out.println("You have been successfully logged in!");
+            return employee;
+        } else {
+            System.out.println("Login attempt has failed. Please try again.");
+            return null;
+        }
+    }
+
     public Employee register() {
         System.out.println("Please enter your first name.");
         String first = sc.nextLine();

@@ -33,14 +33,20 @@ public class ConnectionUtil {
         // MOST SECURE WAY
         // Use environment variables to store
         // Pull environment variables
+
         String url = System.getenv("url");
         String username = System.getenv("username");
         String password = System.getenv("password");
+
+
         try {
+            Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             System.out.println("Could not establish connection");
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
         return conn;
     }
