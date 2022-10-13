@@ -3,7 +3,9 @@ package com.revature.service;
 import com.revature.dao.EmployeeDAO;
 import com.revature.dao.EmployeeDAOImplPostgres;
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class EmployeeService {
@@ -195,5 +197,59 @@ public class EmployeeService {
             password = sc.nextLine();
         }
         return ed.changePassword(employee, password);
+    }
+
+    public void changeEmployeeLevel(Employee loggedInEmployee) {
+        if (loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Director)) {
+            List<Employee> employees = ed.getEmployeeByLevel(EmployeeType.Manager);
+            for (Employee employee : employees) {
+                formatEmployee(employee);
+            }
+            System.out.println("Please enter the id of the employee you want to promote or demote");
+            int id = sc.nextInt();
+            System.out.println("      1) Promote");
+            System.out.println("      2) Demote");
+            int choice = sc.nextInt();
+            while (choice != 1 && choice != 2) {
+                System.out.println("Invalid option.");
+                System.out.println("      1) Promote");
+                System.out.println("      2) Demote");
+                choice = sc.nextInt();
+            }
+            if (choice == 1) {
+                Employee employee = ed.changeEmployeeLevel(id, EmployeeType.Director);
+                if(employee != null) {
+                    System.out.println(employee.getFirst() + " " + employee.getLast() + " has been promoted to " + EmployeeType.Director);
+                } else {
+                    System.out.println("An error has occurred. Employee has not been promoted.");
+                }
+            } else {
+                Employee employee = ed.changeEmployeeLevel(id, EmployeeType.Associate);
+                if(employee != null) {
+                    System.out.println(employee.getFirst() + " " + employee.getLast() + " has been demoted to " + EmployeeType.Associate);
+                } else {
+                    System.out.println("An error has occurred. Employee has not been demoted.");
+                }
+            }
+
+        } else {
+            List<Employee> employees = ed.getEmployeeByLevel(EmployeeType.Associate);
+            for (Employee employee : employees) {
+                formatEmployee(employee);
+            }
+            System.out.println("Please enter the id of the employee you want to promote");
+            int id = sc.nextInt();
+            Employee employee = ed.changeEmployeeLevel(id, EmployeeType.Manager);
+            if(employee != null) {
+                System.out.println(employee.getFirst() + " " + employee.getLast() + " has been promoted to " + EmployeeType.Manager);
+            } else {
+                System.out.println("An error has occurred. Employee has not been promoted.");
+            }
+        }
+    }
+
+    public void formatEmployee(Employee employee) {
+        System.out.println("Employee Id: " + employee.getId() + "\nName: " + employee.getFirst() + " " + employee.getLast() + "\nEmployee Type: " + employee.getEmployeeLevel());
+        System.out.println("----------------------------------------------------------------------------------------------------------");
     }
 }

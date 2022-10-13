@@ -1,6 +1,10 @@
 package com.revature.dao;
 
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
+
+import java.util.List;
+import java.util.logging.Level;
 
 public interface EmployeeDAO {
     Employee getEmployeeByUsername(String username);
@@ -10,4 +14,8 @@ public interface EmployeeDAO {
     Employee updateEmployeeAddress(int employeeId, String address1, String unit, String city, String state, int zip);
 
     Employee changePassword(Employee employee, String password);
+
+    List<Employee> getEmployeeByLevel(EmployeeType level);
+
+    Employee changeEmployeeLevel(int id, EmployeeType level);
 }

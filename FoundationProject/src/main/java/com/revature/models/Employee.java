@@ -41,6 +41,14 @@ public class Employee {
         this.password = password;
     }
 
+    public Employee(int id, String first, String last, String username, EmployeeType employeeLevel) {
+        this.id = id;
+        this.first = first;
+        this.last = last;
+        this.username = username;
+        this.employeeLevel = employeeLevel;
+    }
+
     public Employee() {
     }
 

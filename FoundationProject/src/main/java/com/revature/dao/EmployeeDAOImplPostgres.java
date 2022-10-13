@@ -2,9 +2,13 @@ package com.revature.dao;
 
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
+import com.revature.models.Request;
 import com.revature.util.ConnectionUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     @Override
@@ -115,7 +119,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     public Employee changePassword(Employee employee, String password) {
         Employee newEmployee = new Employee();
         try(Connection conn = ConnectionUtil.getConnection()) {
-            String sql = "UPDATE employees set password = ? WHERE employee_id = ? RETURNING *";
+            String sql = "UPDATE employees SET password = ? WHERE employee_id = ? RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, password);
             ps.setInt(6, employee.getId());
@@ -141,4 +145,57 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
         }
         return newEmployee;
     }
+
+    @Override
+    public List<Employee> getEmployeeByLevel(EmployeeType level) {
+        List<Employee> employees = new ArrayList<>();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM employees WHERE employee_level = ?::employee_type ORDER BY employee_id";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, level.toString());
+            ResultSet rs;
+            if((rs = ps.executeQuery()) != null) {
+                while (rs.next()) {
+                    int receivedId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedUsername = rs.getString("username");
+                    EmployeeType receivedLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    Employee employee = new Employee(receivedId, receivedFirst, receivedLast, receivedUsername, receivedLevel);
+                    employees.add(employee);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("There are no employees of type: " + level);
+            return null;
+        }
+        return employees;
+    }
+
+    @Override
+    public Employee changeEmployeeLevel(int id, EmployeeType level) {
+        Employee employee = new Employee();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "UPDATE employees SET employee_level = ?::employee_type WHERE employee_id = ? RETURNING *";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, level.toString());
+            ps.setInt(2, id);
+            ResultSet rs;
+            if ((rs = ps.executeQuery()) != null) {
+                rs.next();
+                employee.setId(rs.getInt("employee_id"));
+                employee.setFirst(rs.getString("first"));
+                employee.setLast(rs.getString("last"));
+                employee.setUsername(rs.getString("username"));
+                employee.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return employee;
+    }
+
+
 }

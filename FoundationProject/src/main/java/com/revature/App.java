@@ -12,13 +12,13 @@ public class App {
     public static void main(String[] args) {
         EmployeeService es = new EmployeeService();
         RequestService rs = new RequestService();
+        Scanner sc = new Scanner(System.in);
         int id;
         boolean running = true;
         System.out.println("Welcome To Reimburse+");
         while (running) {
             System.out.println("Welcome! Please sign up or login by following the prompts below.");
             Menus.loginRegisterPrompt();
-            Scanner sc = new Scanner(System.in);
             int choice = sc.nextInt();
             while (choice != 1 && choice != 2 && choice != 3) {
                 System.out.println("Invalid option. Menu options are selected by entering the number of the option you wish to select.");
@@ -45,7 +45,7 @@ public class App {
                     System.out.println("Main Menu:");
                     Menus.directorMainMenuPrompt();
                     choice = sc.nextInt();
-                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8) {
+                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8 && choice != 9) {
                         System.out.println("Invalid Option.");
                         Menus.directorMainMenuPrompt();
                         choice = sc.nextInt();
@@ -69,12 +69,15 @@ public class App {
                             rs.getRequestsByEmployeeId(id);
                             break;
                         case 6:
-                            es.updateEmployeeAddress(loggedInEmployee);
+                            es.changeEmployeeLevel(loggedInEmployee);
                             break;
                         case 7:
-                            es.changePassword(loggedInEmployee);
+                            es.updateEmployeeAddress(loggedInEmployee);
                             break;
                         case 8:
+                            es.changePassword(loggedInEmployee);
+                            break;
+                        case 9:
                             System.out.println("Have a good day, " + loggedInEmployee.getFirst() + "!");
                             loggedInEmployee = null;
                             break;
@@ -84,7 +87,7 @@ public class App {
                     System.out.println("Main Menu:");
                     Menus.managerMainMenuPrompt();
                     choice = sc.nextInt();
-                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8) {
+                    while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6 && choice != 7 && choice != 8 && choice != 9) {
                         System.out.println("Invalid Option.");
                         Menus.managerMainMenuPrompt();
                         choice = sc.nextInt();
@@ -108,12 +111,15 @@ public class App {
                             rs.getRequestsByEmployeeId(id);
                             break;
                         case 6:
-                            es.updateEmployeeAddress(loggedInEmployee);
+                            es.changeEmployeeLevel(loggedInEmployee);
                             break;
                         case 7:
-                            es.changePassword(loggedInEmployee);
+                            es.updateEmployeeAddress(loggedInEmployee);
                             break;
                         case 8:
+                            es.changePassword(loggedInEmployee);
+                            break;
+                        case 9:
                             System.out.println("Have a good day, " + loggedInEmployee.getFirst() + "!");
                             loggedInEmployee = null;
                             break;
@@ -150,6 +156,7 @@ public class App {
                             break;
                     }
                 }
+                sc.nextLine();
             }
         }
     }
