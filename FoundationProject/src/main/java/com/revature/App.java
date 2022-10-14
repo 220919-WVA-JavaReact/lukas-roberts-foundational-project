@@ -3,15 +3,15 @@ package com.revature;
 import com.revature.menus.Menus;
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
-import com.revature.service.EmployeeService;
-import com.revature.service.RequestService;
+import com.revature.service.EmployeeServiceCLI;
+import com.revature.service.RequestServiceCLI;
 
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
-        EmployeeService es = new EmployeeService();
-        RequestService rs = new RequestService();
+        EmployeeServiceCLI es = new EmployeeServiceCLI();
+        RequestServiceCLI rs = new RequestServiceCLI();
         Scanner sc = new Scanner(System.in);
         int id;
         boolean running = true;

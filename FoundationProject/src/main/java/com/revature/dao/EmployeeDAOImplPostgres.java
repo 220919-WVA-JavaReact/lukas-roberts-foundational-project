@@ -1,14 +1,11 @@
 package com.revature.dao;
-
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
-import com.revature.models.Request;
 import com.revature.util.ConnectionUtil;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
+
 
 public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     @Override

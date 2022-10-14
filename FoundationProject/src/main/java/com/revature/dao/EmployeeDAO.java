@@ -1,10 +1,7 @@
 package com.revature.dao;
-
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
-
 import java.util.List;
-import java.util.logging.Level;
 
 public interface EmployeeDAO {
     Employee getEmployeeByUsername(String username);

@@ -1,5 +1,4 @@
 package com.revature.menus;
-
 import com.revature.models.Employee;
 
 public class Menus {

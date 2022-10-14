@@ -1,5 +1,4 @@
 package com.revature.models;
-
 import java.util.Objects;
 
 public class Request {
@@ -12,8 +11,6 @@ public class Request {
     private boolean completed;
 
     private String type;
-
-
 
     public Request() {
 

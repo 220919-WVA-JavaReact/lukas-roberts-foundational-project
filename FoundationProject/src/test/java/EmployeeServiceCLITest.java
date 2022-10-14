@@ -1,13 +1,12 @@
 import com.revature.dao.EmployeeDAO;
-import com.revature.service.EmployeeService;
+import com.revature.service.EmployeeServiceCLI;
 import org.junit.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 
-public class EmployeeServiceTest {
+public class EmployeeServiceCLITest {
 //    @BeforeClass
 //    public static void doBeforeClass() {
 //        System.out.println("This is the first thing that runs in this class. Only runs one time.");
@@ -29,7 +28,7 @@ public class EmployeeServiceTest {
     static EmployeeDAO ed;
 
     @InjectMocks
-    private static EmployeeService es;
+    private static EmployeeServiceCLI es;
 
     @Before
     public void beforeEach() {

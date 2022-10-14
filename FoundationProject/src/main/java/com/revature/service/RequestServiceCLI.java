@@ -6,7 +6,7 @@ import com.revature.models.Request;
 import java.util.List;
 import java.util.Scanner;
 
-public class RequestService {
+public class RequestServiceCLI {
     Scanner sc = new Scanner(System.in);
     RequestDAO rd = new RequestDAOImplPostgres();
 

@@ -8,7 +8,7 @@ import com.revature.models.EmployeeType;
 import java.util.List;
 import java.util.Scanner;
 
-public class EmployeeService {
+public class EmployeeServiceCLI {
     EmployeeDAO ed = new EmployeeDAOImplPostgres();
     Scanner sc = new Scanner(System.in);
 
@@ -17,17 +17,6 @@ public class EmployeeService {
         String username = sc.nextLine();
         System.out.println("Please enter your password.");
         String password = sc.nextLine();
-        Employee employee = ed.getEmployeeByUsername(username);
-        if (password.equals(employee.getPassword())) {
-            System.out.println("You have been successfully logged in!");
-            return employee;
-        } else {
-            System.out.println("Login attempt has failed. Please try again.");
-            return null;
-        }
-    }
-
-    public Employee login(String username, String password) {
         Employee employee = ed.getEmployeeByUsername(username);
         if (password.equals(employee.getPassword())) {
             System.out.println("You have been successfully logged in!");

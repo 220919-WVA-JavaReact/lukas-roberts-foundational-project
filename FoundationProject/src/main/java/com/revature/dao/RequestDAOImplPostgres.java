@@ -1,10 +1,8 @@
 package com.revature.dao;
-
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
 import com.revature.models.Request;
 import com.revature.util.ConnectionUtil;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

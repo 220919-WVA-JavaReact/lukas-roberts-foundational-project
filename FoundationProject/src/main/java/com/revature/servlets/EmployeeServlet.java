@@ -3,7 +3,8 @@ package com.revature.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.Employee;
 import com.revature.models.EmployeeType;
-import com.revature.service.EmployeeService;
+import com.revature.service.EmployeeServiceAPI;
+import com.revature.service.EmployeeServiceCLI;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,24 +15,8 @@ import java.io.IOException;
 
 @WebServlet("/employees")
 public class EmployeeServlet extends HttpServlet {
-//    private final ObjectMapper om;
-    EmployeeService es = new EmployeeService();
+    EmployeeServiceAPI esa = new EmployeeServiceAPI();
     ObjectMapper om = new ObjectMapper();
-
-//    public EmployeeServlet(ObjectMapper mapper) {
-//        this.om = mapper;
-//    }
-//
-//
-//    @Override
-//    public void init() throws ServletException {
-//        System.out.println("[LOG] - UserServlet Instantiated!");
-//    }
-//
-//    @Override
-//    public void destroy() {
-//        System.out.println("[LOG] - UserServlet Destroyed!");
-//    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,10 +29,18 @@ public class EmployeeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Employee employee = om.readValue(req.getInputStream(), Employee.class); /*model.class*/
-        Employee emp = es.login(employee.getUsername(), employee.getPassword());
-        String respPayload = om.writeValueAsString(emp);
-        resp.getWriter().write(respPayload);
+        if (req.getParameter("action").equals("login")){
+            Employee employee = om.readValue(req.getInputStream(), Employee.class); /*model.class*/
+            Employee emp = esa.login(employee.getUsername(), employee.getPassword());
+            String respPayload = om.writeValueAsString(emp);
+            resp.getWriter().write(respPayload);
+        } else if (req.getParameter("action").equals("register")) {
+            Employee employee = om.readValue(req.getInputStream(), Employee.class);
+            Employee emp = esa.register(employee.getFirst(), employee.getLast(), employee.getAddress1(), employee.getAddress2(), employee.getCity(), employee.getState(), employee.getZip(), employee.getUsername(), employee.getPassword());
+            String respPayload = om.writeValueAsString(emp);
+            resp.getWriter().write(respPayload);
+        }
+
     }
 
     @Override
