@@ -41,7 +41,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     @Override
     public Employee createEmployee(String first, String last, String address_1, String address_2, String city, String state, int zip, String username, String password) {
         Employee employee = new Employee();
-        try(Connection conn = ConnectionUtil.getConnection()) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "INSERT INTO employees (first, last, address_1, address_2, city, state, zip, username, password, employee_level) VALUES (?,?,?,?,?,?,?,?,?,?::employee_type) RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, first);
@@ -80,7 +80,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     @Override
     public Employee updateEmployeeAddress(int employeeId, String address_1, String address_2, String city, String state, int zip) {
         Employee employee = new Employee();
-        try(Connection conn = ConnectionUtil.getConnection()) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "UPDATE employees set address_1 = ?, address_2 = ?, city = ?, state = ?, zip = ? WHERE employee_id = ? RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, address_1);
@@ -115,7 +115,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     @Override
     public Employee changePassword(Employee employee, String password) {
         Employee newEmployee = new Employee();
-        try(Connection conn = ConnectionUtil.getConnection()) {
+        try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "UPDATE employees SET password = ? WHERE employee_id = ? RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, password);
@@ -151,7 +151,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, level.toString());
             ResultSet rs;
-            if((rs = ps.executeQuery()) != null) {
+            if ((rs = ps.executeQuery()) != null) {
                 while (rs.next()) {
                     int receivedId = rs.getInt("employee_id");
                     String receivedFirst = rs.getString("first");
@@ -194,5 +194,46 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
         return employee;
     }
 
+    @Override
+    public List<Employee> getAllEmployees(Employee loggedInEmployee) {
+        List<Employee> employees = new ArrayList<>();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM employees WHERE employee_id != ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, loggedInEmployee.getId());
+            ResultSet rs;
+            if ((rs = ps.executeQuery()) != null) {
+                while (rs.next()) {
+                    int receivedId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedUsername = rs.getString("username");
+                    EmployeeType receivedLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    Employee employee = new Employee(receivedId, receivedFirst, receivedLast, receivedUsername, receivedLevel);
+                    employees.add(employee);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return employees;
+    }
+
+    @Override
+    public boolean usernameInSystem(String username) throws NullPointerException {
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM employees WHERE username = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            if ((ps.executeQuery()) != null) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            return false;
+        }
+        return false;
+    }
 
 }

@@ -7,12 +7,14 @@ com\revature\service\RequestServiceCLI.class
 com\revature\models\Request.class
 com\revature\servlets\AuthServlet.class
 com\revature\service\RequestServiceAPI.class
+com\revature\SpringXmlDriver.class
 com\revature\util\ConnectionUtil.class
 com\revature\servlets\SanityServlet.class
 com\revature\service\EmployeeServiceCLI.class
 com\revature\service\EmployeeServiceAPI.class
 com\revature\util\ContextLoaderListener.class
 com\revature\App.class
+com\revature\config\AppConfig.class
 com\revature\dao\RequestDAO.class
 com\revature\menus\Menus.class
 com\revature\servlets\EmployeeServlet.class

@@ -15,4 +15,8 @@ public interface EmployeeDAO {
     List<Employee> getEmployeeByLevel(EmployeeType level);
 
     Employee changeEmployeeLevel(int id, EmployeeType level);
+
+    List<Employee> getAllEmployees(Employee loggedInEmployee);
+
+    boolean usernameInSystem(String username);
 }

@@ -144,6 +144,20 @@ public class Employee {
         this.employeeLevel = employeeLevel;
     }
 
+    public String toJsonString() {
+        return "{\"id\":" + id + ", " +
+                "\"first\":\"" + first + "\", " +
+                "\"last\":\"" + last + "\", " +
+                "\"address1\":\"" + address1 + "\", " +
+                "\"address2\":\"" + address2 + "\", " +
+                "\"city\":\"" + city + "\", " +
+                "\"state\":\"" + state + "\", " +
+                "\"zip\":" + zip + ", " +
+                "\"username\":\"" + username + "\", " +
+                "\"password\":\"" + password + "\", " +
+                "\"employeeLevel\":\"" + employeeLevel + "\"" +
+        "}";
+    }
     @Override
     public String toString() {
         return "Employee{" +

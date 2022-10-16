@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/auth")
@@ -21,20 +22,48 @@ public class AuthServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session;
         if (req.getParameter("action").equals("login")){
             Employee employee = om.readValue(req.getInputStream(), Employee.class); /*model.class*/
-            Employee emp = esa.login(employee.getUsername(), employee.getPassword());
-            String respPayload = om.writeValueAsString(emp);
-            resp.getWriter().write(respPayload);
+            String payload = esa.login(employee.getUsername(), employee.getPassword());
+            if (payload.equals("username")) {
+                resp.setStatus(400);
+                resp.getWriter().write("We have no record of that username in our system.");
+            } else if (payload.equals("password")) {
+                resp.setStatus(400);
+                resp.getWriter().write("Incorrect password. Please try again.");
+            } else {
+                Employee emp = om.readValue(payload, Employee.class);
+                session = req.getSession();
+                session.setAttribute("auth-user", emp);
+                resp.setStatus(200);
+                resp.getWriter().write(payload);
+            }
+
         } else if (req.getParameter("action").equals("register")) {
             Employee employee = om.readValue(req.getInputStream(), Employee.class);
             Employee emp = esa.register(employee.getFirst(), employee.getLast(), employee.getAddress1(), employee.getAddress2(), employee.getCity(), employee.getState(), employee.getZip(), employee.getUsername(), employee.getPassword());
             String respPayload = om.writeValueAsString(emp);
-            resp.getWriter().write(respPayload);
+            if (!respPayload.equals("null")) {
+                session = req.getSession();
+                session.setAttribute("auth-user", emp);
+                resp.setStatus(200);
+                resp.getWriter().write(respPayload);
+            } else {
+                resp.setStatus(400);
+                resp.getWriter().write("Username already exists.");
+            }
         }
     }
 
-
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            resp.getWriter().write("You have be logged out successfully.");
+        }
+    }
 }
 
 /* for doPost
@@ -56,6 +85,7 @@ public class AuthServlet extends HttpServlet {
         errorMessage.put("Message", "No user found with provided credentials");
         errorMessage.put("Timestamp", LocalDateTime.now().toString());
         resp.getWriter().write(mapper.writeValueAsString(errorMessage))
+
         in other servlet posts
         HttpSession session = req.getSession(false);
         if (session == null {
