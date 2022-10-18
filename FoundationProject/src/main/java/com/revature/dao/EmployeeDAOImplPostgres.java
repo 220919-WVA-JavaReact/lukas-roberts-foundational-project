@@ -17,19 +17,20 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
             ps.setString(1, username);
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
-                rs.next();
-                int receivedId = rs.getInt("employee_id");
-                String receivedFirst = rs.getString("first");
-                String receivedLast = rs.getString("last");
-                String receivedAddress1 = rs.getString("address_1");
-                String receivedAddress2 = rs.getString("address_2");
-                String receivedCity = rs.getString("city");
-                String receivedState = rs.getString("state");
-                int receivedZip = rs.getInt("zip");
-                String receivedUsername = rs.getString("username");
-                String receivedPassword = rs.getString("password");
-                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
-                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedEmployeeLevel);
+                if (rs.next()) {
+                    int receivedId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedAddress1 = rs.getString("address_1");
+                    String receivedAddress2 = rs.getString("address_2");
+                    String receivedCity = rs.getString("city");
+                    String receivedState = rs.getString("state");
+                    int receivedZip = rs.getInt("zip");
+                    String receivedUsername = rs.getString("username");
+                    String receivedPassword = rs.getString("password");
+                    EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    employee = new Employee(receivedId, receivedFirst, receivedLast, receivedAddress1, receivedAddress2, receivedCity, receivedState, receivedZip, receivedUsername, receivedPassword, receivedEmployeeLevel);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -119,7 +120,7 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
             String sql = "UPDATE employees SET password = ? WHERE employee_id = ? RETURNING *";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, password);
-            ps.setInt(6, employee.getId());
+            ps.setInt(2, employee.getId());
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 rs.next();

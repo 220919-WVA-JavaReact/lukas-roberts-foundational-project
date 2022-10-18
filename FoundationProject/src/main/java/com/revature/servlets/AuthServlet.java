@@ -24,22 +24,18 @@ public class AuthServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session;
         if (req.getParameter("action").equals("login")){
-            Employee employee = om.readValue(req.getInputStream(), Employee.class); /*model.class*/
-            String payload = esa.login(employee.getUsername(), employee.getPassword());
-            if (payload.equals("username")) {
-                resp.setStatus(400);
-                resp.getWriter().write("We have no record of that username in our system.");
-            } else if (payload.equals("password")) {
-                resp.setStatus(400);
-                resp.getWriter().write("Incorrect password. Please try again.");
-            } else {
-                Employee emp = om.readValue(payload, Employee.class);
+            Employee employee = om.readValue(req.getInputStream(), Employee.class); /*model.class*/    //  <-- json object in request
+            Employee emp = esa.login(employee.getUsername(), employee.getPassword());
+            String respPayload = om.writeValueAsString(emp);
+            if (!respPayload.equals("null")) {
                 session = req.getSession();
                 session.setAttribute("auth-user", emp);
                 resp.setStatus(200);
-                resp.getWriter().write(payload);
+                resp.getWriter().write(respPayload);
+            } else {
+                resp.setStatus(400);
+                resp.getWriter().write("Invalid credentials");
             }
-
         } else if (req.getParameter("action").equals("register")) {
             Employee employee = om.readValue(req.getInputStream(), Employee.class);
             Employee emp = esa.register(employee.getFirst(), employee.getLast(), employee.getAddress1(), employee.getAddress2(), employee.getCity(), employee.getState(), employee.getZip(), employee.getUsername(), employee.getPassword());

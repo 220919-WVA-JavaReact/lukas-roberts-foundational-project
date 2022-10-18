@@ -16,6 +16,12 @@ public class Request {
 
     }
 
+    public Request(double price, String description, String type) {
+        this.price = price;
+        this.description = description;
+        this.type = type;
+    }
+
     public Request(Employee employee, double price, String description, String type ) {
         this.employee = employee;
         this.price = price;
