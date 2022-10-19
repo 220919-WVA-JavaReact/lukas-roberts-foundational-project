@@ -2,6 +2,7 @@ package com.revature.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.Employee;
+import com.revature.models.EmployeeType;
 import com.revature.models.Request;
 import com.revature.service.RequestServiceAPI;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 @WebServlet("/tickets")
 public class RequestServlet extends HttpServlet {
@@ -26,11 +28,34 @@ public class RequestServlet extends HttpServlet {
         if (session != null) {
             Employee loggedInEmployee = (Employee) session.getAttribute("auth-user");
             if (req.getParameter("action").equals("get-my-tickets")) {
-                List<Request> requests = rsa.getMyTickets(lo)
-            } else if (req.getParameter("action").equals("get-all-pending")) {
-
+                List<Request> requests = rsa.getMyTickets(loggedInEmployee.getId());
+                if (requests.size() < 1) {
+                    resp.getWriter().write("You currently have no submitted requests.");
+                } else {
+                    String payload = om.writeValueAsString(requests);
+                    resp.getWriter().write(payload);
+                }
+            } else if (req.getParameter("action").equals("get-tickets-by-status")) {
+                if (loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Associate)) {
+                    resp.getWriter().write("You must be logged in as a manager to view this information.");
+                } else {
+                    if (req.getParameter("status").equals("Pending")) {
+                        List<Request> requests = rsa.getTicketsByStatus("Pending");
+                        String payload = om.writeValueAsString(requests);
+                        resp.getWriter().write(payload);
+                    } else if (req.getParameter("status").equals("Approved")) {
+                        List<Request> requests = rsa.getTicketsByStatus("Approved");
+                        String payload = om.writeValueAsString(requests);
+                        resp.getWriter().write(payload);
+                    } else if (req.getParameter("status").equals("Denied")) {
+                        List<Request> requests = rsa.getTicketsByStatus("Denied");
+                        String payload = om.writeValueAsString(requests);
+                        resp.getWriter().write(payload);
+                    }
+                }
             }
         }
+
     }
 
     @Override
@@ -67,7 +92,7 @@ public class RequestServlet extends HttpServlet {
             if (req.getParameter("action").equals("approve-tickets")) {
 
             } else if (req.getParameter("action").equals("deny-pending")) {
-
+                
             }
         }
     }

@@ -106,15 +106,19 @@ public class EmployeeServlet extends HttpServlet {
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
                 String providedPassword = (String) jsonInput.get("current-password");
                 if (loggedInEmployee.getPassword().equals(providedPassword)) {
-                    Employee employee = esa.changePassword(loggedInEmployee, (String) jsonInput.get("new-password"));
-                    if (employee != null) {
-                        String respPayload = om.writeValueAsString(employee);
-                        resp.getWriter().write(respPayload);
+                    if (loggedInEmployee.getPassword().equals((String) jsonInput.get("new-password"))) {
+                        resp.getWriter().write("Your new password cannot be the same as your current password. Failed to update password.");
                     } else {
-                        resp.getWriter().write("Failed to update your password");
+                        Employee employee = esa.changePassword(loggedInEmployee, (String) jsonInput.get("new-password"));
+                        if (employee != null) {
+                            String respPayload = om.writeValueAsString(employee);
+                            resp.getWriter().write(respPayload);
+                        } else {
+                            resp.getWriter().write("Failed to update your password");
+                        }
                     }
                 } else {
-                    resp.getWriter().write("The password you have entered is incorrect. Failed to update password.");
+                    resp.getWriter().write("Your current password is incorrect. Failed to update password.");
                 }
             }
         } else {

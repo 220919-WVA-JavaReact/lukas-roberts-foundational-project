@@ -28,10 +28,10 @@ public class AuthServlet extends HttpServlet {
             Employee emp = esa.login(employee.getUsername(), employee.getPassword());
             String respPayload = om.writeValueAsString(emp);
             if (!respPayload.equals("null")) {
+                resp.getWriter().write(respPayload);
                 session = req.getSession();
                 session.setAttribute("auth-user", emp);
                 resp.setStatus(200);
-                resp.getWriter().write(respPayload);
             } else {
                 resp.setStatus(400);
                 resp.getWriter().write("Invalid credentials");

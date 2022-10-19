@@ -14,9 +14,11 @@ public class RequestServiceAPI {
         return rd.createRequest(employee, price, description, type);
     }
 
-    public List<Request> getRequestsByEmployeeId(int employeeId) {
-        List<Request> requests = rd.getRequestsByEmployeeId(employeeId);
-
+    public List<Request> getMyTickets(int id) {
+        return rd.getRequestsByEmployeeId(id);
     }
 
+    public List<Request> getTicketsByStatus(String status) {
+        return rd.viewRequestsByStatus(status);
+    }
 }
