@@ -22,40 +22,40 @@ public class EmployeeServlet extends HttpServlet {
     ObjectMapper om = new ObjectMapper();
     List<Employee> employees;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        HttpSession session = req.getSession(false);
-        if (session != null) {
-            Employee loggedInEmployee = (Employee) session.getAttribute("auth-user");
-            if (loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Director)) {
-                employees = esa.getAllEmployees(loggedInEmployee);
-                if (employees != null) {
-                    String respPayload = om.writeValueAsString(employees);
-                    resp.getWriter().write(respPayload);
-                    resp.setStatus(200);
-                } else {
-                    resp.getWriter().write("There are no employees under your level.");
-                }
-
-            } else if(loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Manager)) {
-                employees = esa.getEmployeeByLevel(EmployeeType.Associate);
-                if (employees != null) {
-                    String respPayload = om.writeValueAsString(employees);
-                    resp.getWriter().write(respPayload);
-                    resp.setStatus(200);
-                } else {
-                    resp.getWriter().write("There are no employees under your level.");
-                }
-
-            } else {
-                resp.setStatus(400);
-                resp.getWriter().write("Associates are not allowed to view all the other employees.");
-            }
-        } else {
-            resp.getWriter().write("You must be logged in to view this page.");
-        }
-    }
+//    @Override
+//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        resp.setContentType("application/json");
+//        HttpSession session = req.getSession(false);
+//        if (session != null) {
+//            Employee loggedInEmployee = (Employee) session.getAttribute("auth-user");
+//            if (loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Director)) {
+//                employees = esa.getAllEmployees(loggedInEmployee);
+//                if (employees != null) {
+//                    String respPayload = om.writeValueAsString(employees);
+//                    resp.getWriter().write(respPayload);
+//                    resp.setStatus(200);
+//                } else {
+//                    resp.getWriter().write("There are no employees under your level.");
+//                }
+//
+//            } else if(loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Manager)) {
+//                employees = esa.getEmployeeByLevel(EmployeeType.Associate);
+//                if (employees != null) {
+//                    String respPayload = om.writeValueAsString(employees);
+//                    resp.getWriter().write(respPayload);
+//                    resp.setStatus(200);
+//                } else {
+//                    resp.getWriter().write("There are no employees under your level.");
+//                }
+//
+//            } else {
+//                resp.setStatus(400);
+//                resp.getWriter().write("Associates are not allowed to view all the other employees.");
+//            }
+//        } else {
+//            resp.getWriter().write("You must be logged in to view this page.");
+//        }
+//    }
 
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,9 +77,11 @@ public class EmployeeServlet extends HttpServlet {
                 Employee employeeToChange = esa.getEmployee((String) jsonInput.get("username"));
                 if (employeeToChange.getEmployeeLevel().equals(EmployeeType.valueOf((String) jsonInput.get("employee-type")))) {
                     resp.getWriter().write("That employee is already the requested level.");
+                    resp.setStatus(202);
                 } else {
                     Employee promotedEmployee = esa.changeEmployeeLevel(employeeToChange.getId(), EmployeeType.valueOf((String) jsonInput.get("employee-type")));
                     resp.getWriter().write(om.writeValueAsString(promotedEmployee));
+                    resp.setStatus(200);
                 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -88,9 +90,11 @@ public class EmployeeServlet extends HttpServlet {
                 Employee employeeToChange = esa.getEmployee((String) jsonInput.get("username"));
                 if (employeeToChange.getEmployeeLevel().equals(EmployeeType.valueOf((String) jsonInput.get("employee-type")))) {
                     resp.getWriter().write("That employee is already the requested level.");
+                    resp.setStatus(202);
                 } else {
                     Employee promotedEmployee = esa.changeEmployeeLevel(employeeToChange.getId(), EmployeeType.valueOf((String) jsonInput.get("employee-type")));
                     resp.getWriter().write(om.writeValueAsString(promotedEmployee));
+                    resp.setStatus(200);
                 }
 
 //--------------------------------------------------------------------------------------------------------------
@@ -98,6 +102,7 @@ public class EmployeeServlet extends HttpServlet {
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
                 Employee updatedEmployee = esa.updateEmployeeAddress(loggedInEmployee.getId(), (String) jsonInput.get("address-1"), (String) jsonInput.get("address-2"), (String) jsonInput.get("city"), (String) jsonInput.get("state"), (int) jsonInput.get("zip"));
                 resp.getWriter().write(om.writeValueAsString(updatedEmployee));
+                resp.setStatus(200);
 //--------------------------------------------------------------------------------------------------------------
             } else if (req.getParameter("action").equals("change-password")) {
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
@@ -105,21 +110,26 @@ public class EmployeeServlet extends HttpServlet {
                 if (loggedInEmployee.getPassword().equals(providedPassword)) {
                     if (loggedInEmployee.getPassword().equals((String) jsonInput.get("new-password"))) {
                         resp.getWriter().write("Your new password cannot be the same as your current password. Failed to update password.");
+                        resp.setStatus(202);
                     } else {
                         Employee employee = esa.changePassword(loggedInEmployee, (String) jsonInput.get("new-password"));
                         if (employee != null) {
                             String respPayload = om.writeValueAsString(employee);
                             resp.getWriter().write(respPayload);
+                            resp.setStatus(200);
                         } else {
                             resp.getWriter().write("Failed to update your password");
+                            resp.setStatus(500);
                         }
                     }
                 } else {
                     resp.getWriter().write("Your current password is incorrect. Failed to update password.");
+                    resp.setStatus(400);
                 }
             }
         } else {
             resp.getWriter().write("You must be logged in to view this page.");
+            resp.setStatus(401);
         }
     }
 }

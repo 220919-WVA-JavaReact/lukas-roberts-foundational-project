@@ -43,7 +43,7 @@ public class AuthServlet extends HttpServlet {
             if (!respPayload.equals("null")) {
                 session = req.getSession();
                 session.setAttribute("auth-user", emp);
-                resp.setStatus(200);
+                resp.setStatus(201);
                 resp.getWriter().write(respPayload);
             } else {
                 resp.setStatus(400);
@@ -58,6 +58,7 @@ public class AuthServlet extends HttpServlet {
         if (session != null) {
             session.invalidate();
             resp.getWriter().write("You have be logged out successfully.");
+            resp.setStatus(200);
         }
     }
 }
