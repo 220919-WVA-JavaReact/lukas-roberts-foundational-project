@@ -89,10 +89,28 @@ public class RequestServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session != null) {
             Employee loggedInEmployee = (Employee) session.getAttribute("auth-user");
-            if (req.getParameter("action").equals("approve-tickets")) {
-
-            } else if (req.getParameter("action").equals("deny-pending")) {
-                
+            if (loggedInEmployee.getEmployeeLevel().equals(EmployeeType.Associate)) {
+                resp.getWriter().write("Associates are not allowed to approve or deny tickets.");
+            } else {
+                // can't approve your own tickets and can't update a completed ticket
+                // get ticket check completed
+                HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
+                Request request = rsa.getTicketById((int) jsonInput.get("ticket-id"));
+                if (!request.isCompleted()) {
+                    if (request.getEmployee().getId() != loggedInEmployee.getId()) {
+                        if (req.getParameter("action").equals("approve-ticket")) {
+                            Request updatedRequest = rsa.updateRequest(request.getId(), "Approved");
+                            resp.getWriter().write(om.writeValueAsString(updatedRequest));
+                        } else if (req.getParameter("action").equals("deny-ticket")) {
+                            Request updatedRequest = rsa.updateRequest(request.getId(), "Approved");
+                            resp.getWriter().write(om.writeValueAsString(updatedRequest));
+                        }
+                    } else {
+                        resp.getWriter().write("Managers cannot approve or deny their own tickets.");
+                    }
+                } else {
+                    resp.getWriter().write("That request has already been completed. Completed requests cannot be altered.");
+                }
             }
         }
     }

@@ -21,7 +21,7 @@ public class EmployeeServiceAPI {
     }
 
     public Employee getEmployee(String username) {
-        return ed.getEmployeeByUsername(username);
+        return ed.getEmployeeNoPassword(username);
     }
 
     public Employee register(String first, String last, String address1, String unit, String city, String state, int zip, String username, String password) {

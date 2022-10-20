@@ -40,6 +40,31 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
     }
 
     @Override
+    public Employee getEmployeeNoPassword(String username) {
+        Employee employee = new Employee();
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM employees WHERE username = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs;
+            if ((rs = ps.executeQuery()) != null) {
+                if (rs.next()) {
+                    int receivedId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedUsername = rs.getString("username");
+                    EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    employee = new Employee(receivedId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return employee;
+    }
+
+    @Override
     public Employee createEmployee(String first, String last, String address_1, String address_2, String city, String state, int zip, String username, String password) {
         Employee employee = new Employee();
         try (Connection conn = ConnectionUtil.getConnection()) {
@@ -158,8 +183,8 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
                     String receivedFirst = rs.getString("first");
                     String receivedLast = rs.getString("last");
                     String receivedUsername = rs.getString("username");
-                    EmployeeType receivedLevel = EmployeeType.valueOf(rs.getString("employee_level"));
-                    Employee employee = new Employee(receivedId, receivedFirst, receivedLast, receivedUsername, receivedLevel);
+                    EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    Employee employee = new Employee(receivedId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
                     employees.add(employee);
                 }
             }
@@ -182,11 +207,12 @@ public class EmployeeDAOImplPostgres implements  EmployeeDAO {
             ResultSet rs;
             if ((rs = ps.executeQuery()) != null) {
                 rs.next();
-                employee.setId(rs.getInt("employee_id"));
-                employee.setFirst(rs.getString("first"));
-                employee.setLast(rs.getString("last"));
-                employee.setUsername(rs.getString("username"));
-                employee.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
+                int receivedId = rs.getInt("employee_id");
+                String receivedFirst = rs.getString("first");
+                String receivedLast = rs.getString("last");
+                String receivedUsername = rs.getString("username");
+                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                employee = new Employee(receivedId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
             }
         } catch (SQLException e) {
             e.printStackTrace();

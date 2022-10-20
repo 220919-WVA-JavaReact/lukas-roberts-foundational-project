@@ -93,7 +93,7 @@ public class RequestDAOImplPostgres implements RequestDAO{
     @Override
     public List<Request> viewAllRequests(Employee employee) {
         List<Request> requests = new ArrayList<>();
-        Employee emp = new Employee();
+
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM requests r NATURAL JOIN employees e WHERE r.employee_id != ?";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -107,12 +107,13 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     String receivedType = rs.getString("type");
                     String receivedApproval = rs.getString("approval_status");
                     boolean receivedCompleted = rs.getBoolean("completed");
-                    emp.setId(rs.getInt("employee_id"));
-                    emp.setFirst(rs.getString("first"));
-                    emp.setLast(rs.getString("last"));
-                    emp.setUsername(rs.getString("username"));
-                    emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
-                    Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
+                    int receivedEmployeeId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedUsername = rs.getString("username");
+                    EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    Employee employee1 = new Employee(receivedEmployeeId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
+                    Request request = new Request(receivedId, employee1, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -125,7 +126,6 @@ public class RequestDAOImplPostgres implements RequestDAO{
     @Override
     public List<Request> viewRequestsByStatus(String status) {
         List<Request> requests = new ArrayList<>();
-        Employee emp = new Employee();
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE approval_status = ? ORDER BY id";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -139,12 +139,13 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     String receivedType = rs.getString("type");
                     String receivedApproval = rs.getString("approval_status");
                     boolean receivedCompleted = rs.getBoolean("completed");
-                    emp.setId(rs.getInt("employee_id"));
-                    emp.setFirst(rs.getString("first"));
-                    emp.setLast(rs.getString("last"));
-                    emp.setUsername(rs.getString("username"));
-                    emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
-                    Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
+                    int receivedEmployeeId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedUsername = rs.getString("username");
+                    EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    Employee employee = new Employee(receivedEmployeeId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
+                    Request request = new Request(receivedId, employee, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -156,7 +157,6 @@ public class RequestDAOImplPostgres implements RequestDAO{
 
     @Override
     public List<Request> getRequestsByEmployeeId(int id) {
-        Employee emp = new Employee();
         List<Request> requests = new ArrayList<>();
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE employee_id = ? ORDER BY id";
@@ -171,12 +171,13 @@ public class RequestDAOImplPostgres implements RequestDAO{
                     String receivedType = rs.getString("type");
                     String receivedApproval = rs.getString("approval_status");
                     boolean receivedCompleted = rs.getBoolean("completed");
-                    emp.setId(rs.getInt("employee_id"));
-                    emp.setFirst(rs.getString("first"));
-                    emp.setLast(rs.getString("last"));
-                    emp.setUsername(rs.getString("username"));
-                    emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
-                    Request request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
+                    int receivedEmployeeId = rs.getInt("employee_id");
+                    String receivedFirst = rs.getString("first");
+                    String receivedLast = rs.getString("last");
+                    String receivedUsername = rs.getString("username");
+                    EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                    Employee employee = new Employee(receivedEmployeeId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
+                    Request request = new Request(receivedId, employee, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
                     requests.add(request);
                 }
             }
@@ -216,7 +217,6 @@ public class RequestDAOImplPostgres implements RequestDAO{
     @Override
     public Request getRequestById(int id) {
         Request request = new Request();
-        Employee emp = new Employee();
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM requests NATURAL JOIN employees WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -230,12 +230,13 @@ public class RequestDAOImplPostgres implements RequestDAO{
                 String receivedType = rs.getString("type");
                 String receivedApproval = rs.getString("approval_status");
                 boolean receivedCompleted = rs.getBoolean("completed");
-                emp.setId(rs.getInt("employee_id"));
-                emp.setFirst(rs.getString("first"));
-                emp.setLast(rs.getString("last"));
-                emp.setUsername(rs.getString("username"));
-                emp.setEmployeeLevel(EmployeeType.valueOf(rs.getString("employee_level")));
-                request = new Request(receivedId, emp, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
+                int receivedEmployeeId = rs.getInt("employee_id");
+                String receivedFirst = rs.getString("first");
+                String receivedLast = rs.getString("last");
+                String receivedUsername = rs.getString("username");
+                EmployeeType receivedEmployeeLevel = EmployeeType.valueOf(rs.getString("employee_level"));
+                Employee employee = new Employee(receivedEmployeeId, receivedFirst, receivedLast, receivedUsername, receivedEmployeeLevel);
+                request = new Request(receivedId, employee, receivedPrice, receivedDescription, receivedType, receivedApproval, receivedCompleted);
             }
         } catch (SQLException e) {
             e.printStackTrace();

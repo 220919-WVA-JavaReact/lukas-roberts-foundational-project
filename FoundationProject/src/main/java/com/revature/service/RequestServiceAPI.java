@@ -21,4 +21,13 @@ public class RequestServiceAPI {
     public List<Request> getTicketsByStatus(String status) {
         return rd.viewRequestsByStatus(status);
     }
+
+    public Request updateRequest(int id, String approvalStatus) {
+        Employee employee = rd.getRequestById(id).getEmployee();
+        return rd.updateRequest(id, approvalStatus, employee);
+    }
+
+    public Request getTicketById(int id) {
+        return rd.getRequestById(id);
+    }
 }

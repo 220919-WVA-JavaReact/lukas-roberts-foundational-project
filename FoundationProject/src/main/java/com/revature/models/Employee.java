@@ -44,7 +44,13 @@ public class Employee {
         this.id = id;
         this.first = first;
         this.last = last;
+        this.address1 = "Hidden";
+        this.address2 = "Hidden";
+        this.city = "Hidden";
+        this.state = "Hidden";
+        this.zip = 0;
         this.username = username;
+        this.password = "Hidden";
         this.employeeLevel = employeeLevel;
     }
 
