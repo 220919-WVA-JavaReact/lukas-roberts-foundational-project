@@ -95,7 +95,9 @@ public class EmployeeServlet extends HttpServlet {
 
 //--------------------------------------------------------------------------------------------------------------
             } else if (req.getParameter("action").equals("change-address")) {
-
+                HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
+                Employee updatedEmployee = esa.updateEmployeeAddress(loggedInEmployee.getId(), (String) jsonInput.get("address-1"), (String) jsonInput.get("address-2"), (String) jsonInput.get("city"), (String) jsonInput.get("state"), (int) jsonInput.get("zip"));
+                resp.getWriter().write(om.writeValueAsString(updatedEmployee));
 //--------------------------------------------------------------------------------------------------------------
             } else if (req.getParameter("action").equals("change-password")) {
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);

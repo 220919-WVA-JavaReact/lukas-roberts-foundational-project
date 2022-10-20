@@ -93,7 +93,6 @@ public class RequestDAOImplPostgres implements RequestDAO{
     @Override
     public List<Request> viewAllRequests(Employee employee) {
         List<Request> requests = new ArrayList<>();
-
         try (Connection conn = ConnectionUtil.getConnection()) {
             String sql = "SELECT * FROM requests r NATURAL JOIN employees e WHERE r.employee_id != ?";
             PreparedStatement ps = conn.prepareStatement(sql);
