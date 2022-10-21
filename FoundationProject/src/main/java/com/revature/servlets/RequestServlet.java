@@ -71,13 +71,13 @@ public class RequestServlet extends HttpServlet {
         if (session != null) {
             Employee loggedInEmployee = (Employee) session.getAttribute("auth-user");
             Request request = om.readValue(req.getInputStream(), Request.class);
-            if (request.getPrice() <= 0 || String.valueOf(request.getPrice()).equals("")) {
+            if (request.getPrice() <= 0 || String.valueOf(request.getPrice()).trim().equals("")) {
                 resp.getWriter().write("Price cannot be blank and must be greater than 0.");
                 resp.setStatus(400);
-            } else if (request.getDescription().equals("")) {
+            } else if (request.getDescription().trim().equals("")) {
                 resp.getWriter().write("Description cannot be blank.");
                 resp.setStatus(400);
-            } else if (request.getType().equals("")) {
+            } else if (request.getType().trim().equals("")) {
                 resp.getWriter().write("Type cannot be blank.");
                 resp.setStatus(400);
             } else if (!request.getType().equals("Travel") && !request.getType().equals("Lodging") && !request.getType().equals("Food") && !request.getType().equals("Other")) {
@@ -101,8 +101,6 @@ public class RequestServlet extends HttpServlet {
                 resp.getWriter().write("Associates are not allowed to approve or deny tickets.");
                 resp.setStatus(401);
             } else {
-                // can't approve your own tickets and can't update a completed ticket
-                // get ticket check completed
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
                 Request request = rsa.getTicketById((int) jsonInput.get("ticket-id"));
                 if (!request.isCompleted()) {

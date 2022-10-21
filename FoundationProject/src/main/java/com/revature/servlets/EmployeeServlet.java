@@ -100,9 +100,23 @@ public class EmployeeServlet extends HttpServlet {
 //--------------------------------------------------------------------------------------------------------------
             } else if (req.getParameter("action").equals("change-address")) {
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
-                Employee updatedEmployee = esa.updateEmployeeAddress(loggedInEmployee.getId(), (String) jsonInput.get("address-1"), (String) jsonInput.get("address-2"), (String) jsonInput.get("city"), (String) jsonInput.get("state"), (int) jsonInput.get("zip"));
-                resp.getWriter().write(om.writeValueAsString(updatedEmployee));
-                resp.setStatus(200);
+                if (((String) jsonInput.get("address-1")).trim().equals("")) {
+                    resp.getWriter().write("Address 1 cannot be empty.");
+                    resp.setStatus(400);
+                } else if (((String) jsonInput.get("city")).trim().equals("")) {
+                    resp.getWriter().write("City cannot be empty.");
+                    resp.setStatus(400);
+                } else if (((String) jsonInput.get("state")).trim().equals("")) {
+                    resp.getWriter().write("State cannot be empty.");
+                    resp.setStatus(400);
+                } else if (((int) jsonInput.get("zip")) <= 0) {
+                    resp.getWriter().write("Zip cannot be less than or equal to 0.");
+                    resp.setStatus(400);
+                } else {
+                    Employee updatedEmployee = esa.updateEmployeeAddress(loggedInEmployee.getId(), (String) jsonInput.get("address-1"), (String) jsonInput.get("address-2"), (String) jsonInput.get("city"), (String) jsonInput.get("state"), (int) jsonInput.get("zip"));
+                    resp.getWriter().write(om.writeValueAsString(updatedEmployee));
+                    resp.setStatus(200);
+                }
 //--------------------------------------------------------------------------------------------------------------
             } else if (req.getParameter("action").equals("change-password")) {
                 HashMap<String, Object> jsonInput = om.readValue(req.getInputStream(), HashMap.class);
@@ -115,6 +129,8 @@ public class EmployeeServlet extends HttpServlet {
                         Employee employee = esa.changePassword(loggedInEmployee, (String) jsonInput.get("new-password"));
                         if (employee != null) {
                             String respPayload = om.writeValueAsString(employee);
+                            session = req.getSession();
+                            session.setAttribute("auth-user", employee);
                             resp.getWriter().write(respPayload);
                             resp.setStatus(200);
                         } else {
